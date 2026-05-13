@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>LOCAL SOFTWARE — project</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="viewer-page">
+    <div class="viewer-frame-host">
+      <div class="viewer-frame-shell">
+        <iframe class="viewer-frame" title="Project site"></iframe>
+      </div>
+    </div>
+    <a class="viewer-home" href="index.html">← HOME</a>
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var raw = params.get('url');
+        if (!raw) {
+          window.location.replace('index.html');
+          return;
+        }
+
+        var decoded;
+        try {
+          decoded = decodeURIComponent(raw);
+        } catch (e) {
+          window.location.replace('index.html');
+          return;
+        }
+
+        var siteUrl;
+        try {
+          siteUrl = new URL(decoded);
+        } catch (e) {
+          window.location.replace('index.html');
+          return;
+        }
+
+        if (siteUrl.protocol !== 'https:') {
+          window.location.replace('index.html');
+          return;
+        }
+
+        var host = siteUrl.hostname;
+        var path = siteUrl.pathname;
+        var allowed = false;
+        if (host === 'lcf221.github.io') {
+          allowed = /^\/project[13](\/|$)/.test(path);
+        } else if (host === 'portfolio-dusky-two-32.vercel.app') {
+          allowed = true;
+        } else if (host === 'project2-pi-gules.vercel.app') {
+          allowed = true;
+        }
+
+        if (!allowed) {
+          window.location.replace('index.html');
+          return;
+        }
+
+        var homeLower =
+          (host === 'lcf221.github.io' && /^\/project1(\/|$)/.test(path)) ||
+          host === 'portfolio-dusky-two-32.vercel.app';
+        if (homeLower) {
+          document.body.classList.add('viewer-page--home-lower');
+        }
+
+        var iframe = document.querySelector('.viewer-frame');
+        iframe.src = siteUrl.href;
+      })();
+    </script>
+  </body>
+</html>
